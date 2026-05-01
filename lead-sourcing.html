@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Complispect | Lead Sourcing Engine</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,300&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+@import url("https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,300&family=DM+Mono:wght@400;500&display=swap");
+:root{--ink:#0a0a0f;--paper:#f5f2eb;--cream:#ede9df;--signal:#e8401c;--signal-dark:#c02f0f;
+--safe:#1a7a4a;--warn:#d97b00;--steel:#1c2b3a;--steel-light:#2d4459;--mist:#8a9aaa;--rule:rgba(10,10,15,0.1);}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:"DM Sans",sans-serif;background:var(--paper);color:var(--ink);overflow-x:hidden;cursor:none}
+.cursor{position:fixed;width:10px;height:10px;background:var(--signal);border-radius:50%;pointer-events:none;z-index:9999;transform:translate(-50%,-50%);transition:transform 0.1s,width 0.2s,height 0.2s,background 0.2s}
+.cursor-ring{position:fixed;width:36px;height:36px;border:1.5px solid var(--signal);border-radius:50%;pointer-events:none;z-index:9998;transform:translate(-50%,-50%);transition:transform 0.15s ease,width 0.3s,height 0.3s,opacity 0.3s;opacity:0.5}
+body:hover .cursor{opacity:1}
+.ticker{background:var(--signal);color:#fff;padding:9px 0;overflow:hidden;white-space:nowrap}
+.ticker-inner{display:inline-block;animation:ticker 28s linear infinite;font-family:"DM Mono",monospace;font-size:11px;letter-spacing:0.08em}
+.ticker-inner span{margin:0 40px;opacity:0.85}.ticker-inner span::before{content:"●";margin-right:12px}
+@keyframes ticker{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+nav{position:sticky;top:0;z-index:100;background:var(--paper);border-bottom:1px solid var(--rule);padding:0 6vw;display:flex;align-items:center;justify-content:space-between;height:64px}
+.nav-logo{font-family:"Bebas Neue",sans-serif;font-size:22px;letter-spacing:0.04em;color:var(--ink);text-decoration:none;display:flex;align-items:center;gap:10px}
+.nav-logo img{height:32px;width:auto;display:block}
+.logo-badge{background:var(--steel);color:#fff;font-family:"DM Mono",monospace;font-size:9px;letter-spacing:0.12em;padding:3px 7px;border-radius:2px}
+.nav-links{display:flex;align-items:center;gap:32px}
+.nav-links a{font-size:13px;font-weight:500;color:var(--ink);text-decoration:none;opacity:0.65;transition:opacity 0.2s}
+.nav-links a:hover{opacity:1}
+.nav-cta{background:var(--signal)!important;color:#fff!important;opacity:1!important;padding:9px 20px;border-radius:3px;font-weight:600!important;font-size:13px!important;transition:background 0.2s!important}
+.nav-cta:hover{background:var(--signal-dark)!important}
+.btn-primary{background:var(--signal);color:#fff;padding:14px 32px;border-radius:3px;font-weight:600;font-size:15px;text-decoration:none;display:inline-flex;align-items:center;gap:10px;transition:background 0.2s,transform 0.15s;border:none;cursor:none}
+.btn-primary:hover{background:var(--signal-dark);transform:translateY(-1px)}
+.btn-primary svg{transition:transform 0.2s}.btn-primary:hover svg{transform:translateX(3px)}
+.btn-ghost{color:var(--ink);padding:14px 24px;border-radius:3px;font-weight:500;font-size:15px;text-decoration:none;display:inline-flex;align-items:center;gap:8px;border:1px solid var(--rule);transition:border-color 0.2s,background 0.2s;cursor:none}
+.btn-ghost:hover{border-color:var(--ink);background:var(--cream)}
+.btn-signal{background:var(--signal);color:#fff;border:none;padding:13px 32px;border-radius:3px;font-family:"DM Sans",sans-serif;font-size:14px;font-weight:600;cursor:none;transition:background 0.2s,transform 0.1s}
+.btn-signal:hover{background:var(--signal-dark);transform:translateY(-1px)}
+.btn-signal:disabled{opacity:0.6;cursor:not-allowed;transform:none}
+.btn-outline{background:transparent;color:var(--ink);border:1.5px solid var(--rule);padding:11px 28px;border-radius:3px;font-family:"DM Sans",sans-serif;font-size:13px;font-weight:500;cursor:none;transition:all 0.2s}
+.btn-outline:hover{border-color:var(--ink);background:var(--cream)}
+input,select,textarea{width:100%;padding:11px 14px;border:1.5px solid var(--rule);border-radius:3px;font-family:"DM Sans",sans-serif;font-size:14px;background:#fff;color:var(--ink);transition:border 0.2s}
+input:focus,select:focus,textarea:focus{outline:none;border-color:var(--signal)}
+label{display:block;font-size:12px;font-weight:600;color:var(--mist);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:6px}
+.form-group{margin-bottom:20px}
+.error-msg{color:var(--signal);font-size:11px;margin-top:4px;display:none;font-family:"DM Mono",monospace}
+.spinner{display:inline-block;width:16px;height:16px;border:2px solid rgba(255,255,255,0.4);border-top-color:#fff;border-radius:50%;animation:spin 0.7s linear infinite;vertical-align:middle;margin-right:6px}
+@keyframes spin{to{transform:rotate(360deg)}}
+@keyframes fadeUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:0.5;transform:scale(0.7)}}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:0.3}}
+footer{background:var(--ink);color:rgba(255,255,255,0.5);padding:60px 6vw 32px}
+.footer-top{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:40px;margin-bottom:48px;padding-bottom:48px;border-bottom:1px solid rgba(255,255,255,0.06)}
+.footer-brand{font-family:"Bebas Neue",sans-serif;font-size:22px;color:#fff;letter-spacing:0.04em;margin-bottom:12px}
+.footer-tagline{font-size:13px;line-height:1.6;max-width:240px}
+.footer-col-title{font-family:"DM Mono",monospace;font-size:10px;letter-spacing:0.14em;text-transform:uppercase;color:rgba(255,255,255,0.3);margin-bottom:16px}
+.footer-links{list-style:none;display:flex;flex-direction:column;gap:10px}
+.footer-links a{color:rgba(255,255,255,0.5);text-decoration:none;font-size:13px;transition:color 0.2s}
+.footer-links a:hover{color:#fff}
+.footer-bottom{display:flex;justify-content:space-between;align-items:center;font-size:12px;flex-wrap:wrap;gap:12px}
+.footer-legal{display:flex;gap:20px}
+.footer-legal a{color:rgba(255,255,255,0.3);text-decoration:none;transition:color 0.2s}
+.footer-legal a:hover{color:rgba(255,255,255,0.7)}
+.reveal{opacity:0;transform:translateY(30px);transition:opacity 0.6s,transform 0.6s}
+.reveal.visible{opacity:1;transform:translateY(0)}
+@media(max-width:1024px){.footer-top{grid-template-columns:1fr 1fr}}
+@media(max-width:640px){.nav-links{display:none;}.footer-top{grid-template-columns:1fr}body{cursor:auto}.cursor,.cursor-ring{display:none}}
+.le-wrap{padding:40px 6vw;max-width:1200px;margin:0 auto}
+.le-header{margin-bottom:36px}
+.le-eyebrow{font-family:"DM Mono",monospace;font-size:10px;letter-spacing:0.14em;color:var(--mist);text-transform:uppercase;margin-bottom:8px}
+.le-title{font-family:"Bebas Neue",sans-serif;font-size:clamp(36px,5vw,56px);letter-spacing:0.02em;margin-bottom:8px;line-height:1}
+.le-title span{color:var(--signal)}
+.le-sub{font-size:14px;color:rgba(10,10,15,0.6);max-width:600px;line-height:1.6}
+.ai-bar{background:var(--cream);border:1px solid var(--rule);border-radius:3px;padding:14px 20px;display:flex;align-items:center;gap:16px;margin-bottom:24px;flex-wrap:wrap}
+.ai-badge{display:inline-flex;align-items:center;gap:8px;padding:6px 14px;border-radius:2px;font-family:"DM Mono",monospace;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;font-weight:700}
+.ai-badge.ds{background:rgba(26,122,74,0.08);color:var(--safe);border:1px solid rgba(26,122,74,0.2)}
+.ai-badge.grok{background:rgba(232,64,28,0.08);color:var(--signal);border:1px solid rgba(232,64,28,0.2)}
+.ai-dot{width:6px;height:6px;border-radius:50%;animation:pulse 1.5s infinite}
+.ai-dot.ok{background:var(--safe)}.ai-dot.alert{background:var(--signal)}
+.token-bar{flex:1;min-width:160px}
+.token-track{height:6px;background:var(--rule);border-radius:3px;overflow:hidden;margin-top:4px}
+.token-fill{height:100%;background:var(--safe);border-radius:3px;transition:width 0.5s,background 0.3s}
+.pipeline-stages{display:grid;grid-template-columns:repeat(6,1fr);gap:10px;margin:24px 0}
+@media(max-width:900px){.pipeline-stages{grid-template-columns:repeat(3,1fr)}}
+@media(max-width:500px){.pipeline-stages{grid-template-columns:1fr 1fr}}
+.stage-card{background:var(--cream);border:1.5px solid var(--rule);border-radius:4px;padding:14px;text-align:center;cursor:pointer;transition:all 0.2s}
+.stage-card:hover{border-color:var(--signal);transform:translateY(-2px)}
+.stage-card.running{border-color:var(--warn);background:rgba(217,123,0,0.04);animation:pulse 1s ease-in-out infinite}
+.stage-card.done{border-color:var(--safe);background:rgba(26,122,74,0.04)}
+.stage-icon{font-size:24px;margin-bottom:6px}
+.stage-name{font-family:"DM Mono",monospace;font-size:9px;letter-spacing:0.1em;text-transform:uppercase;color:var(--mist);margin-bottom:4px}
+.stage-count{font-family:"Bebas Neue",sans-serif;font-size:22px;letter-spacing:0.02em;line-height:1}
+.action-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:24px}
+@media(max-width:700px){.action-grid{grid-template-columns:1fr}}
+.action-btn{background:var(--cream);border:1.5px solid var(--rule);border-radius:3px;padding:16px;cursor:pointer;font-family:"DM Sans",sans-serif;font-size:13px;font-weight:600;transition:all 0.2s;text-align:left;display:flex;align-items:center;gap:10px}
+.action-btn:hover{border-color:var(--signal);transform:translateY(-2px)}
+.action-btn:disabled{opacity:0.5;cursor:not-allowed;transform:none;pointer-events:none}
+.action-btn.running{border-color:var(--warn);background:rgba(217,123,0,0.04)}
+.ab-icon{font-size:20px;flex-shrink:0}
+.ab-text div:first-child{font-weight:600}
+.ab-text div:last-child{font-size:11px;font-weight:400;color:var(--mist);margin-top:2px}
+.leads-panel{background:var(--cream);border:1px solid var(--rule);border-radius:4px;padding:20px;margin-bottom:24px}
+.leads-table{width:100%;border-collapse:collapse;font-size:12px}
+.leads-table th{font-family:"DM Mono",monospace;font-size:9px;letter-spacing:0.1em;text-transform:uppercase;color:var(--mist);padding:8px 10px;border-bottom:2px solid var(--rule);text-align:left;white-space:nowrap}
+.leads-table td{padding:10px;border-bottom:1px solid var(--rule);vertical-align:middle}
+.leads-table tr:hover td{background:rgba(232,64,28,0.02)}
+.pri-badge{padding:2px 8px;border-radius:2px;font-family:"DM Mono",monospace;font-size:9px;font-weight:700;letter-spacing:0.08em}
+.pri-High{background:rgba(232,64,28,0.1);color:var(--signal)}
+.pri-Medium{background:rgba(217,123,0,0.1);color:var(--warn)}
+.pri-Low{background:rgba(138,154,170,0.1);color:var(--mist)}
+.mail-btn{background:none;border:1px solid var(--rule);padding:3px 8px;border-radius:2px;font-size:10px;cursor:pointer;transition:all 0.2s}
+.mail-btn:hover{background:var(--signal);color:#fff;border-color:var(--signal)}
+.log-box{background:var(--steel);color:#afc;font-family:"DM Mono",monospace;font-size:11px;padding:16px;border-radius:4px;max-height:220px;overflow-y:auto;line-height:1.8;margin-top:8px}
+.log-err{color:#f87}.log-ok{color:#8f8}.log-info{color:#8df}.log-warn{color:#fd7}
+.search-bar{display:flex;gap:8px;flex-wrap:wrap}
+.search-bar input{padding:8px 12px;width:200px;flex:1;min-width:120px}
+.search-bar select{padding:8px 10px;min-width:130px}
+</style>
+</head>
+<body>
+<div class="cursor" id="cursor"></div><div class="cursor-ring" id="cursorRing"></div><div class="ticker"><div class="ticker-inner"><span>GOOGLE BOOLEAN SEARCH</span><span>LINKEDIN SITE: SEARCH</span><span>AI LEAD RESEARCH</span><span>6-STAGE PIPELINE</span><span>COLD MAIL AUTOMATION</span><span>FOLLOW-UP SEQUENCES</span><span>REPLY DETECTION</span><span>ADMIN EMAIL ALERTS</span><span>GOOGLE BOOLEAN SEARCH</span><span>LINKEDIN SITE: SEARCH</span><span>AI LEAD RESEARCH</span><span>6-STAGE PIPELINE</span><span>COLD MAIL AUTOMATION</span><span>FOLLOW-UP SEQUENCES</span></div></div><nav><a href="index.html" class="nav-logo"><span>COMPLISPECT</span><span class="logo-badge">LEAD ENGINE</span></a><div class="nav-links"><a href="index.html">Home</a><a href="dashboard.html">My Dashboard</a><a href="lead-sourcing.html" style="opacity:1;font-weight:700">Lead Engine</a></div></nav>
+<div class="le-wrap"><div class="le-header"><div class="le-eyebrow">Complispect Lead Engine — Admin Only</div><h1 class="le-title">Google Boolean + LinkedIn<br><span>AI Lead Pipeline</span></h1><p class="le-sub">No paid APIs required. Uses Google Boolean search + site:linkedin.com searches across all countries and cities, AI qualification, and automated cold mail with follow-up sequences. All leads are saved directly to the LeadSourcing spreadsheet tab.</p></div><div class="ai-bar"><div class="ai-badge ds" id="aiBadge"><span class="ai-dot ok" id="aiDot"></span><span id="aiLabel">DeepSeek R1 — Active</span></div><div class="token-bar"><div style="font-family:'DM Mono',monospace;font-size:9px;letter-spacing:0.1em;text-transform:uppercase;color:var(--mist)">Token Budget</div><div class="token-track"><div class="token-fill" id="tokenFill" style="width:100%"></div></div></div><div style="font-family:'DM Mono',monospace;font-size:10px;color:var(--mist)" id="tokenPct">100%</div><button class="btn-outline" style="padding:6px 14px;font-size:11px;cursor:pointer" onclick="getAIStatus()">↻ Refresh</button><button class="btn-outline" style="padding:6px 14px;font-size:11px;cursor:pointer;color:var(--signal);border-color:var(--signal)" onclick="restoreDS()">🔁 Restore DeepSeek</button></div><div class="pipeline-stages"><div class="stage-card" id="stage_0" onclick="runStage(0)"><div class="stage-icon">🗺️</div><div class="stage-name">Sourcing</div><div class="stage-count" id="scount_0">—</div></div><div class="stage-card" id="stage_1" onclick="runStage(1)"><div class="stage-icon">🔍</div><div class="stage-name">Research</div><div class="stage-count" id="scount_1">—</div></div><div class="stage-card" id="stage_2" onclick="runStage(2)"><div class="stage-icon">⚖️</div><div class="stage-name">Qualify</div><div class="stage-count" id="scount_2">—</div></div><div class="stage-card" id="stage_3" onclick="runStage(3)"><div class="stage-icon">✍️</div><div class="stage-name">Email Gen</div><div class="stage-count" id="scount_3">—</div></div><div class="stage-card" id="stage_4" onclick="runStage(4)"><div class="stage-icon">📤</div><div class="stage-name">Outbound</div><div class="stage-count" id="scount_4">—</div></div><div class="stage-card" id="stage_5" onclick="runStage(5)"><div class="stage-icon">💬</div><div class="stage-name">Replies</div><div class="stage-count" id="scount_5">—</div></div></div><div class="action-grid"><button class="action-btn" id="btnFull" onclick="runFullPipeline()"><span class="ab-icon">🚀</span><div class="ab-text"><div>Run Full Pipeline</div><div>All 6 stages in sequence</div></div></button><button class="action-btn" onclick="runStage(0)"><span class="ab-icon">🗺️</span><div class="ab-text"><div>Source Leads</div><div>Google Boolean + LinkedIn</div></div></button><button class="action-btn" onclick="runStage(1)"><span class="ab-icon">🔍</span><div class="ab-text"><div>Research Leads</div><div>AI compliance analysis</div></div></button><button class="action-btn" onclick="runStage(2)"><span class="ab-icon">⚖️</span><div class="ab-text"><div>Qualify & Score</div><div>Score 0–100</div></div></button><button class="action-btn" onclick="runStage(3)"><span class="ab-icon">✍️</span><div class="ab-text"><div>Generate Emails</div><div>AI personalised cold mail</div></div></button><button class="action-btn" onclick="runStage(4)"><span class="ab-icon">📤</span><div class="ab-text"><div>Send Outbound</div><div>With throttling + admin notify</div></div></button></div><div class="leads-panel"><div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;flex-wrap:wrap;gap:10px"><h2 style="font-family:'Bebas Neue',sans-serif;font-size:22px;letter-spacing:0.04em">Lead Database</h2><div class="search-bar"><input type="text" id="leadSearch" placeholder="Search leads..." oninput="filterLeads()"><select id="priorityFilter" onchange="filterLeads()"><option value="">All Priorities</option><option value="High">High</option><option value="Medium">Medium</option><option value="Low">Low</option></select><select id="statusFilter" onchange="filterLeads()"><option value="">All Statuses</option><option value="New">New</option><option value="Cold Mail Sent">Cold Mail Sent</option><option value="Replied">Replied</option><option value="Converted">Converted</option></select><button class="btn-outline" style="padding:8px 12px;font-size:11px;cursor:pointer" onclick="loadLeads()">↻ Reload</button></div></div><div style="overflow-x:auto"><table class="leads-table"><thead><tr><th>#</th><th>Business</th><th>Owner</th><th>Email</th><th>City</th><th>Country</th><th>Industry</th><th>Score</th><th>Priority</th><th>Status</th><th>Source</th><th>Action</th></tr></thead><tbody id="leadsBody"><tr><td colspan="12" style="text-align:center;padding:28px;color:var(--mist)">Click "Source Leads" or "Run Full Pipeline" to populate leads. All results are saved to your LeadSourcing tab.</td></tr></tbody></table></div><div style="font-family:'DM Mono',monospace;font-size:10px;color:var(--mist);margin-top:8px" id="leadCount"></div></div><div style="margin-bottom:8px;font-family:'DM Mono',monospace;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;color:var(--mist)">Activity Log</div><div class="log-box" id="logBox"><span class="log-info">▶ Lead engine ready. All leads are saved to your LeadSourcing spreadsheet tab. Admin notifications sent automatically on pipeline completion.</span></div></div>
+<footer><div class="footer-top"><div><div class="footer-brand">COMPLISPECT</div><p class="footer-tagline">Automated compliance deadline tracking for regulated businesses across the UK, US, Canada, Australia, Nigeria and beyond.</p></div><div><p class="footer-col-title">Product</p><ul class="footer-links"><li><a href="index.html#how">How It Works</a></li><li><a href="index.html#industries">Industries</a></li><li><a href="index.html#pricing">Pricing</a></li><li><a href="onboarding.html">Free Trial</a></li></ul></div><div><p class="footer-col-title">Industries</p><ul class="footer-links"><li><a href="#">Childcare & Nurseries</a></li><li><a href="#">Restaurants & Food</a></li><li><a href="#">Healthcare & Dental</a></li><li><a href="#">Care Homes</a></li><li><a href="#">SMEs & Business</a></li></ul></div><div><p class="footer-col-title">Company</p><ul class="footer-links"><li><a href="#">About Ascendia</a></li><li><a href="#">Contact Us</a></li><li><a href="#">Support</a></li><li><a href="#">Privacy Policy</a></li></ul></div></div><div class="footer-bottom"><span>© 2026 Ascendia Core Ltd. All rights reserved. Complispect is a product of Ascendia Core Ltd.</span><div class="footer-legal"><a href="#">Privacy</a><a href="#">Terms</a><a href="#">Cookies</a></div></div></footer>
+<script>
+var cursor=document.getElementById("cursor");
+var ring=document.getElementById("cursorRing");
+var mx=0,my=0,rx=0,ry=0;
+if(cursor&&ring){
+  document.addEventListener("mousemove",function(e){
+    mx=e.clientX;my=e.clientY;
+    cursor.style.left=mx+"px";cursor.style.top=my+"px";
+  });
+  function animateRing(){
+    rx+=(mx-rx)*0.12;ry+=(my-ry)*0.12;
+    ring.style.left=rx+"px";ring.style.top=ry+"px";
+    requestAnimationFrame(animateRing);
+  }
+  animateRing();
+  document.querySelectorAll("a,button,.faq-q,.step-card,.industry-card,.price-card,.alert-card,.plan-card").forEach(function(el){
+    el.addEventListener("mouseenter",function(){
+      cursor.style.width="16px";cursor.style.height="16px";
+      ring.style.width="50px";ring.style.height="50px";
+    });
+    el.addEventListener("mouseleave",function(){
+      cursor.style.width="10px";cursor.style.height="10px";
+      ring.style.width="36px";ring.style.height="36px";
+    });
+  });
+}
+var WEBAPP_URL="https://script.google.com/macros/s/AKfycbzGcAfAtxIvsS8TEFFgGNgHgECnKQzjmIU0czNP9YCeXNPK8YkkIEtxeI-PzSJt4dhM/exec";
+var allLeads=[],filteredLeads=[];
+var STAGE_ACTIONS=["runLeadSourcing","runLeadResearch","runQualification","runEmailGeneration","runOutbound","runReplyDetection"];
+var STAGE_NAMES=["Sourcing","Research","Qualify","Email Gen","Outbound","Reply Detect"];
+function runStage(idx){
+  addLog("info","▶ Running Stage "+(idx+1)+": "+STAGE_NAMES[idx]+"...");
+  var stageEl=document.getElementById("stage_"+idx);
+  if(stageEl)stageEl.className="stage-card running";
+  callAction(STAGE_ACTIONS[idx],function(d){
+    if(stageEl)stageEl.className="stage-card "+(d&&!d.error?"done":"");
+    var cnt=document.getElementById("scount_"+idx);
+    var n=(d&&d.count!==undefined)?d.count:"?";
+    if(cnt)cnt.textContent=n;
+    if(d&&d.error){addLog("err","Stage "+(idx+1)+" error: "+d.error);}
+    else{addLog("ok","✅ Stage "+(idx+1)+" complete — "+n+" result(s)");}
+    if(idx===0||idx===4||idx===5)loadLeads();
+  });
+}
+function runFullPipeline(){
+  addLog("info","🚀 Starting full 6-stage pipeline...");
+  var btn=document.getElementById("btnFull");
+  if(btn){btn.disabled=true;btn.className="action-btn running";}
+  callAction("runFullPipeline",function(d){
+    if(btn){btn.disabled=false;btn.className="action-btn";}
+    if(d&&d.error){addLog("err","Pipeline error: "+d.error);}
+    else{addLog("ok","✅ Full pipeline complete! Admin summary email sent.");}
+    loadLeads();getAIStatus();
+  });
+}
+function restoreDS(){
+  callAction("restoreDeepSeek",function(){addLog("ok","✅ DeepSeek R1 restored as primary AI.");getAIStatus();});
+}
+function callAction(action,cb){
+  fetch(WEBAPP_URL,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({action:action})})
+  .then(function(r){return r.json();})
+  .then(function(d){
+    if(d&&d.ok===false)addLog("err","Action failed: "+(d.error||"Unknown error"));
+    if(cb)cb(d);
+  })
+  .catch(function(e){addLog("err","Network error: "+e.message);if(cb)cb(null);});
+}
+function getAIStatus(){
+  fetch(WEBAPP_URL+"?action=getAIStatus")
+  .then(function(r){return r.json();})
+  .then(function(d){
+    if(!d||!d.ok)return;
+    var isDS=(d.activeAI||"").toLowerCase().indexOf("deepseek")!==-1;
+    var badge=document.getElementById("aiBadge"),dot=document.getElementById("aiDot"),label=document.getElementById("aiLabel");
+    if(badge)badge.className="ai-badge "+(isDS?"ds":"grok");
+    if(dot)dot.className="ai-dot "+(isDS?"ok":"alert");
+    if(label)label.textContent=isDS?"DeepSeek R1 — Active":"Grok — Fallback Active";
+    var pct=parseFloat(d.tokenPct||100);
+    var fill=document.getElementById("tokenFill"),pctEl=document.getElementById("tokenPct");
+    if(fill){fill.style.width=pct+"%";fill.style.background=pct>50?"var(--safe)":pct>20?"var(--warn)":"var(--signal)";}
+    if(pctEl)pctEl.textContent=Math.round(pct)+"%";
+  }).catch(function(){});
+}
+function loadLeads(){
+  fetch(WEBAPP_URL+"?action=getLeads")
+  .then(function(r){return r.json();})
+  .then(function(d){
+    if(d&&d.leads){allLeads=d.leads;filteredLeads=allLeads.slice();renderLeadsTable(filteredLeads);}
+    addLog("info","Loaded "+((d&&d.leads)?d.leads.length:0)+" lead(s) from spreadsheet.");
+  })
+  .catch(function(){addLog("err","Could not load leads.");});
+}
+function renderLeadsTable(leads){
+  var tbody=document.getElementById("leadsBody");
+  var cnt=document.getElementById("leadCount");
+  if(!tbody)return;
+  if(!leads||leads.length===0){
+    tbody.innerHTML='<tr><td colspan="12" style="text-align:center;padding:28px;color:var(--mist)">No leads match your filter. Try running sourcing first.</td></tr>';
+    if(cnt)cnt.textContent="";return;
+  }
+  if(cnt)cnt.textContent=leads.length+" lead(s) shown";
+  tbody.innerHTML=leads.map(function(l,i){
+    var pri=l.priority||"Medium";
+    var email=l.email||"";
+    return'<tr>'+
+      '<td style="color:var(--mist);font-family:DM Mono,monospace;font-size:10px">'+(i+1)+'</td>'+
+      '<td style="font-weight:500;max-width:150px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">'+(l.businessName||"")+'</td>'+
+      '<td style="font-size:11px;color:var(--mist)">'+(l.owner||"")+'</td>'+
+      '<td style="font-family:DM Mono,monospace;font-size:10px;color:var(--signal)">'+(email||"—")+'</td>'+
+      '<td style="font-size:11px">'+(l.city||"")+'</td>'+
+      '<td style="font-size:11px">'+(l.country||"")+'</td>'+
+      '<td style="font-size:11px;max-width:120px;overflow:hidden;text-overflow:ellipsis">'+(l.industry||"")+'</td>'+
+      '<td style="font-family:DM Mono,monospace;font-size:11px;font-weight:700;color:'+(Number(l.score||0)>=80?"var(--safe)":Number(l.score||0)>=60?"var(--warn)":"var(--mist)")+'">'+(l.score||"—")+'</td>'+
+      '<td><span class="pri-badge pri-'+pri+'">'+(pri)+'</span></td>'+
+      '<td style="font-size:11px">'+(l.status||"New")+'</td>'+
+      '<td style="font-size:10px;color:var(--mist)">'+(l.source||"").replace("Google-Boolean","Google").replace("LinkedIn-Google","LinkedIn")+'</td>'+
+      '<td>'+(email?'<button class="mail-btn" onclick="sendMail(\''+email+'\')">📧 Mail</button>':"—")+'</td>'+
+      '</tr>';
+  }).join("");
+}
+function filterLeads(){
+  var q=(document.getElementById("leadSearch").value||"").toLowerCase();
+  var p=document.getElementById("priorityFilter").value;
+  var s=document.getElementById("statusFilter").value;
+  filteredLeads=allLeads.filter(function(l){
+    var matchQ=!q||
+      ((l.businessName||"").toLowerCase().indexOf(q)!==-1||
+       (l.email||"").toLowerCase().indexOf(q)!==-1||
+       (l.industry||"").toLowerCase().indexOf(q)!==-1||
+       (l.city||"").toLowerCase().indexOf(q)!==-1||
+       (l.country||"").toLowerCase().indexOf(q)!==-1);
+    var matchP=!p||(l.priority||"Medium")===p;
+    var matchS=!s||(l.status||"New")===s;
+    return matchQ&&matchP&&matchS;
+  });
+  renderLeadsTable(filteredLeads);
+}
+function sendMail(email){
+  if(!email)return;
+  if(!confirm("Send cold mail to: "+email+"?"))return;
+  addLog("info","📤 Sending cold mail to "+email+"...");
+  fetch(WEBAPP_URL,{method:"POST",headers:{"Content-Type":"application/json"},
+    body:JSON.stringify({action:"sendColdMailTo",email:email})})
+  .then(function(r){return r.json();})
+  .then(function(d){
+    if(d&&d.ok){addLog("ok","✅ Cold mail sent to "+email+". Admin notified.");}
+    else{addLog("err","Failed to send to "+email+": "+(d&&d.error?d.error:"unknown"));}
+    loadLeads();
+  })
+  .catch(function(e){addLog("err","Network error: "+e.message);});
+}
+function addLog(type,msg){
+  var box=document.getElementById("logBox");if(!box)return;
+  var d=new Date();
+  var ts="["+d.getHours().toString().padStart(2,"0")+":"+d.getMinutes().toString().padStart(2,"0")+":"+d.getSeconds().toString().padStart(2,"0")+"] ";
+  var cls=type==="err"?"log-err":type==="ok"?"log-ok":type==="warn"?"log-warn":"log-info";
+  var el=document.createElement("div");
+  el.className=cls;el.textContent=ts+msg;
+  box.appendChild(el);
+  box.scrollTop=box.scrollHeight;
+}
+window.addEventListener("DOMContentLoaded",function(){
+  getAIStatus();
+  loadLeads();
+});
+</script>
+</body>
+</html>

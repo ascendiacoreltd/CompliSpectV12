@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Complispect | My Compliance Dashboard</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,300&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+@import url("https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,300&family=DM+Mono:wght@400;500&display=swap");
+:root{--ink:#0a0a0f;--paper:#f5f2eb;--cream:#ede9df;--signal:#e8401c;--signal-dark:#c02f0f;
+--safe:#1a7a4a;--warn:#d97b00;--steel:#1c2b3a;--steel-light:#2d4459;--mist:#8a9aaa;--rule:rgba(10,10,15,0.1);}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:"DM Sans",sans-serif;background:var(--paper);color:var(--ink);overflow-x:hidden;cursor:none}
+.cursor{position:fixed;width:10px;height:10px;background:var(--signal);border-radius:50%;pointer-events:none;z-index:9999;transform:translate(-50%,-50%);transition:transform 0.1s,width 0.2s,height 0.2s,background 0.2s}
+.cursor-ring{position:fixed;width:36px;height:36px;border:1.5px solid var(--signal);border-radius:50%;pointer-events:none;z-index:9998;transform:translate(-50%,-50%);transition:transform 0.15s ease,width 0.3s,height 0.3s,opacity 0.3s;opacity:0.5}
+body:hover .cursor{opacity:1}
+.ticker{background:var(--signal);color:#fff;padding:9px 0;overflow:hidden;white-space:nowrap}
+.ticker-inner{display:inline-block;animation:ticker 28s linear infinite;font-family:"DM Mono",monospace;font-size:11px;letter-spacing:0.08em}
+.ticker-inner span{margin:0 40px;opacity:0.85}.ticker-inner span::before{content:"●";margin-right:12px}
+@keyframes ticker{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+nav{position:sticky;top:0;z-index:100;background:var(--paper);border-bottom:1px solid var(--rule);padding:0 6vw;display:flex;align-items:center;justify-content:space-between;height:64px}
+.nav-logo{font-family:"Bebas Neue",sans-serif;font-size:22px;letter-spacing:0.04em;color:var(--ink);text-decoration:none;display:flex;align-items:center;gap:10px}
+.nav-logo img{height:32px;width:auto;display:block}
+.logo-badge{background:var(--steel);color:#fff;font-family:"DM Mono",monospace;font-size:9px;letter-spacing:0.12em;padding:3px 7px;border-radius:2px}
+.nav-links{display:flex;align-items:center;gap:32px}
+.nav-links a{font-size:13px;font-weight:500;color:var(--ink);text-decoration:none;opacity:0.65;transition:opacity 0.2s}
+.nav-links a:hover{opacity:1}
+.nav-cta{background:var(--signal)!important;color:#fff!important;opacity:1!important;padding:9px 20px;border-radius:3px;font-weight:600!important;font-size:13px!important;transition:background 0.2s!important}
+.nav-cta:hover{background:var(--signal-dark)!important}
+.btn-primary{background:var(--signal);color:#fff;padding:14px 32px;border-radius:3px;font-weight:600;font-size:15px;text-decoration:none;display:inline-flex;align-items:center;gap:10px;transition:background 0.2s,transform 0.15s;border:none;cursor:none}
+.btn-primary:hover{background:var(--signal-dark);transform:translateY(-1px)}
+.btn-primary svg{transition:transform 0.2s}.btn-primary:hover svg{transform:translateX(3px)}
+.btn-ghost{color:var(--ink);padding:14px 24px;border-radius:3px;font-weight:500;font-size:15px;text-decoration:none;display:inline-flex;align-items:center;gap:8px;border:1px solid var(--rule);transition:border-color 0.2s,background 0.2s;cursor:none}
+.btn-ghost:hover{border-color:var(--ink);background:var(--cream)}
+.btn-signal{background:var(--signal);color:#fff;border:none;padding:13px 32px;border-radius:3px;font-family:"DM Sans",sans-serif;font-size:14px;font-weight:600;cursor:none;transition:background 0.2s,transform 0.1s}
+.btn-signal:hover{background:var(--signal-dark);transform:translateY(-1px)}
+.btn-signal:disabled{opacity:0.6;cursor:not-allowed;transform:none}
+.btn-outline{background:transparent;color:var(--ink);border:1.5px solid var(--rule);padding:11px 28px;border-radius:3px;font-family:"DM Sans",sans-serif;font-size:13px;font-weight:500;cursor:none;transition:all 0.2s}
+.btn-outline:hover{border-color:var(--ink);background:var(--cream)}
+input,select,textarea{width:100%;padding:11px 14px;border:1.5px solid var(--rule);border-radius:3px;font-family:"DM Sans",sans-serif;font-size:14px;background:#fff;color:var(--ink);transition:border 0.2s}
+input:focus,select:focus,textarea:focus{outline:none;border-color:var(--signal)}
+label{display:block;font-size:12px;font-weight:600;color:var(--mist);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:6px}
+.form-group{margin-bottom:20px}
+.error-msg{color:var(--signal);font-size:11px;margin-top:4px;display:none;font-family:"DM Mono",monospace}
+.spinner{display:inline-block;width:16px;height:16px;border:2px solid rgba(255,255,255,0.4);border-top-color:#fff;border-radius:50%;animation:spin 0.7s linear infinite;vertical-align:middle;margin-right:6px}
+@keyframes spin{to{transform:rotate(360deg)}}
+@keyframes fadeUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:0.5;transform:scale(0.7)}}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:0.3}}
+footer{background:var(--ink);color:rgba(255,255,255,0.5);padding:60px 6vw 32px}
+.footer-top{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:40px;margin-bottom:48px;padding-bottom:48px;border-bottom:1px solid rgba(255,255,255,0.06)}
+.footer-brand{font-family:"Bebas Neue",sans-serif;font-size:22px;color:#fff;letter-spacing:0.04em;margin-bottom:12px}
+.footer-tagline{font-size:13px;line-height:1.6;max-width:240px}
+.footer-col-title{font-family:"DM Mono",monospace;font-size:10px;letter-spacing:0.14em;text-transform:uppercase;color:rgba(255,255,255,0.3);margin-bottom:16px}
+.footer-links{list-style:none;display:flex;flex-direction:column;gap:10px}
+.footer-links a{color:rgba(255,255,255,0.5);text-decoration:none;font-size:13px;transition:color 0.2s}
+.footer-links a:hover{color:#fff}
+.footer-bottom{display:flex;justify-content:space-between;align-items:center;font-size:12px;flex-wrap:wrap;gap:12px}
+.footer-legal{display:flex;gap:20px}
+.footer-legal a{color:rgba(255,255,255,0.3);text-decoration:none;transition:color 0.2s}
+.footer-legal a:hover{color:rgba(255,255,255,0.7)}
+.reveal{opacity:0;transform:translateY(30px);transition:opacity 0.6s,transform 0.6s}
+.reveal.visible{opacity:1;transform:translateY(0)}
+@media(max-width:1024px){.footer-top{grid-template-columns:1fr 1fr}}
+@media(max-width:640px){.nav-links{display:none;}.footer-top{grid-template-columns:1fr}body{cursor:auto}.cursor,.cursor-ring{display:none}}
+.db-wrap{padding:40px 6vw;max-width:1100px;margin:0 auto}
+.db-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:32px}
+@media(max-width:800px){.db-grid{grid-template-columns:1fr 1fr}}
+@media(max-width:500px){.db-grid{grid-template-columns:1fr}}
+.stat-card{background:var(--cream);border:1px solid var(--rule);border-radius:4px;padding:20px}
+.stat-label{font-family:"DM Mono",monospace;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;color:var(--mist);margin-bottom:6px}
+.stat-value{font-family:"Bebas Neue",sans-serif;font-size:32px;letter-spacing:0.02em;line-height:1}
+.stat-value.ok{color:var(--safe)}.stat-value.warn{color:var(--warn)}.stat-value.alert{color:var(--signal)}
+.compliance-panel{background:var(--cream);border:1px solid var(--rule);border-radius:4px;padding:24px;margin-bottom:24px}
+.ci-table{width:100%;border-collapse:collapse;margin-top:16px}
+.ci-table th{font-family:"DM Mono",monospace;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;color:var(--mist);padding:8px 12px;border-bottom:2px solid var(--rule);text-align:left}
+.ci-table td{padding:12px;border-bottom:1px solid var(--rule);font-size:13px}
+.ci-table tr:hover td{background:rgba(10,10,15,0.02)}
+.badge{display:inline-flex;align-items:center;padding:3px 8px;border-radius:2px;font-family:"DM Mono",monospace;font-size:9px;letter-spacing:0.08em;font-weight:700;text-transform:uppercase}
+.badge.active{background:#e6f4ed;color:var(--safe)}
+.badge.trial{background:#e8f0fe;color:#1a73e8}
+.badge.overdue{background:rgba(232,64,28,0.08);color:var(--signal)}
+.badge.pending{background:rgba(217,123,0,0.08);color:var(--warn)}
+.add-form{background:#fff;border:1px solid var(--rule);border-radius:4px;padding:20px;margin-top:16px;display:none}
+.add-form-grid{display:grid;grid-template-columns:1fr 160px 160px auto;gap:10px;align-items:end}
+@media(max-width:700px){.add-form-grid{grid-template-columns:1fr}}
+.locked-notice{background:rgba(232,64,28,0.06);border:1px solid rgba(232,64,28,0.2);border-radius:3px;padding:10px 14px;font-size:12px;color:var(--signal);margin-top:12px;font-family:"DM Mono",monospace}
+.account-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+@media(max-width:600px){.account-grid{grid-template-columns:1fr}}
+.account-label{font-family:"DM Mono",monospace;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;color:var(--mist);margin-bottom:4px}
+.account-value{font-size:14px;font-weight:500}
+#saveBar{display:none;margin-top:16px;justify-content:flex-end;gap:10px}
+</style>
+</head>
+<body>
+<div class="cursor" id="cursor"></div><div class="cursor-ring" id="cursorRing"></div><nav><a href="index.html" class="nav-logo"><span>COMPLISPECT</span><span class="logo-badge">TRACKER</span></a><div class="nav-links"><span id="navGreet" style="font-size:13px;opacity:0.65"></span><button class="btn-outline" style="padding:8px 16px;font-size:12px;cursor:pointer" onclick="doSignOut()">Sign Out</button></div></nav>
+<div id="loadingState" style="min-height:60vh;display:flex;align-items:center;justify-content:center"><div style="text-align:center"><div style="font-size:40px;margin-bottom:12px">🛡️</div><div style="font-family:'DM Mono',monospace;font-size:12px;color:var(--mist)">Loading your compliance dashboard...</div></div></div><div id="dashContent" style="display:none"><div class="db-wrap"><div style="margin-bottom:32px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px"><div><h1 id="dbTitle" style="font-family:'Bebas Neue',sans-serif;font-size:clamp(28px,4vw,42px);letter-spacing:0.03em;margin-bottom:4px">Your Compliance Dashboard</h1><div id="dbSubtitle" style="font-size:13px;color:var(--mist)"></div></div><div id="planBadge"></div></div><div class="db-grid"><div class="stat-card"><div class="stat-label">Subscription</div><div class="stat-value" id="statSub">—</div></div><div class="stat-card"><div class="stat-label">Next Billing / Trial End</div><div class="stat-value" style="font-size:18px" id="statBilling">—</div></div><div class="stat-card"><div class="stat-label">Compliance Score</div><div class="stat-value" id="statScore">—</div></div><div class="stat-card"><div class="stat-label">Items Tracked</div><div class="stat-value" id="statItems">—</div></div></div><div class="compliance-panel"><div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;flex-wrap:wrap;gap:10px"><h2 style="font-family:'Bebas Neue',sans-serif;font-size:24px;letter-spacing:0.04em">📋 Compliance Items</h2><button class="btn-signal" id="addItemBtn" onclick="toggleAddForm()" style="padding:8px 16px;font-size:12px;cursor:pointer">+ Add Item</button></div><div id="lockedNotice" class="locked-notice" style="display:none">🔒 Compliance items are locked for this billing period. They can be updated at the start of your next billing cycle.</div><div class="add-form" id="addItemForm"><div style="font-family:'DM Mono',monospace;font-size:10px;letter-spacing:0.1em;color:var(--mist);margin-bottom:12px;text-transform:uppercase">Add Compliance Requirement</div><div class="add-form-grid"><div class="form-group" style="margin:0"><label style="font-size:10px">Requirement *</label><input type="text" id="newCIName" placeholder="e.g. GDPR Review, CAC Filing..."></div><div class="form-group" style="margin:0"><label style="font-size:10px">Expiry Date</label><input type="date" id="newCIExpiry"></div><div class="form-group" style="margin:0"><label style="font-size:10px">Frequency</label><select id="newCIFreq"><option value="Annually">Annually</option><option value="Quarterly">Quarterly</option><option value="Monthly">Monthly</option><option value="One-time">One-time</option></select></div><button class="btn-signal" onclick="addNewItem()" style="padding:10px 16px;font-size:12px;white-space:nowrap;cursor:pointer">Add →</button></div><div id="addFormMsg" style="font-family:'DM Mono',monospace;font-size:11px;margin-top:8px;color:var(--safe)"></div></div><table class="ci-table"><thead><tr><th>#</th><th>Requirement</th><th>Expiry</th><th>Frequency</th><th>Status</th></tr></thead><tbody id="ciBody"></tbody></table><div id="noItemsMsg" style="text-align:center;padding:32px;color:var(--mist);font-size:13px;display:none">No compliance items yet. Click "+ Add Item" to get started.</div><div id="saveBar" style="display:none"><button class="btn-outline" style="cursor:pointer" onclick="cancelChanges()">Cancel</button><button class="btn-signal" id="saveBtn" style="cursor:pointer" onclick="saveCompliance()">Save Changes</button></div></div><div class="compliance-panel"><h2 style="font-family:'Bebas Neue',sans-serif;font-size:20px;letter-spacing:0.04em;margin-bottom:16px">Account Details</h2><div class="account-grid" id="accountGrid"></div></div></div></div><div id="errorState" style="display:none;min-height:60vh;align-items:center;justify-content:center"><div style="text-align:center;padding:40px"><div style="font-size:48px;margin-bottom:12px">⚠️</div><h2 style="font-family:'Bebas Neue',sans-serif;font-size:28px;margin-bottom:8px">Session Expired</h2><p style="color:var(--mist);margin-bottom:20px">Please log in again to access your dashboard.</p><a href="https://ascendiacoreltd.github.io/CompliSpectV12/login.html"><button class="btn-signal" style="cursor:pointer">Back to Login</button></a></div></div>
+<footer><div class="footer-top"><div><div class="footer-brand">COMPLISPECT</div><p class="footer-tagline">Automated compliance deadline tracking for regulated businesses across the UK, US, Canada, Australia, Nigeria and beyond.</p></div><div><p class="footer-col-title">Product</p><ul class="footer-links"><li><a href="index.html#how">How It Works</a></li><li><a href="index.html#industries">Industries</a></li><li><a href="index.html#pricing">Pricing</a></li><li><a href="onboarding.html">Free Trial</a></li></ul></div><div><p class="footer-col-title">Industries</p><ul class="footer-links"><li><a href="#">Childcare & Nurseries</a></li><li><a href="#">Restaurants & Food</a></li><li><a href="#">Healthcare & Dental</a></li><li><a href="#">Care Homes</a></li><li><a href="#">SMEs & Business</a></li></ul></div><div><p class="footer-col-title">Company</p><ul class="footer-links"><li><a href="#">About Ascendia</a></li><li><a href="#">Contact Us</a></li><li><a href="#">Support</a></li><li><a href="#">Privacy Policy</a></li></ul></div></div><div class="footer-bottom"><span>© 2026 Ascendia Core Ltd. All rights reserved. Complispect is a product of Ascendia Core Ltd.</span><div class="footer-legal"><a href="#">Privacy</a><a href="#">Terms</a><a href="#">Cookies</a></div></div></footer>
+<script>
+var cursor=document.getElementById("cursor");
+var ring=document.getElementById("cursorRing");
+var mx=0,my=0,rx=0,ry=0;
+if(cursor&&ring){
+  document.addEventListener("mousemove",function(e){
+    mx=e.clientX;my=e.clientY;
+    cursor.style.left=mx+"px";cursor.style.top=my+"px";
+  });
+  function animateRing(){
+    rx+=(mx-rx)*0.12;ry+=(my-ry)*0.12;
+    ring.style.left=rx+"px";ring.style.top=ry+"px";
+    requestAnimationFrame(animateRing);
+  }
+  animateRing();
+  document.querySelectorAll("a,button,.faq-q,.step-card,.industry-card,.price-card,.alert-card,.plan-card").forEach(function(el){
+    el.addEventListener("mouseenter",function(){
+      cursor.style.width="16px";cursor.style.height="16px";
+      ring.style.width="50px";ring.style.height="50px";
+    });
+    el.addEventListener("mouseleave",function(){
+      cursor.style.width="10px";cursor.style.height="10px";
+      ring.style.width="36px";ring.style.height="36px";
+    });
+  });
+}
+var WEBAPP_URL="https://script.google.com/macros/s/AKfycbzGcAfAtxIvsS8TEFFgGNgHgECnKQzjmIU0czNP9YCeXNPK8YkkIEtxeI-PzSJt4dhM/exec";
+var LOGIN_URL="https://ascendiacoreltd.github.io/CompliSpectV12/login.html";
+var clientData=null,ciItems=[],isLocked=false;
+var token=sessionStorage.getItem("ctoken");
+if(!token){window.location.href=LOGIN_URL;}
+function init(){
+  var greet=document.getElementById("navGreet");
+  var cname=sessionStorage.getItem("cname")||"";
+  if(greet&&cname)greet.textContent="Hi, "+cname;
+  fetch(WEBAPP_URL+"?action=getDashboard&token="+encodeURIComponent(token))
+  .then(function(r){return r.json();})
+  .then(function(d){
+    document.getElementById("loadingState").style.display="none";
+    if(d.success&&d.client){
+      clientData=d.client;
+      renderDashboard(d.client);
+      document.getElementById("dashContent").style.display="block";
+    } else {
+      document.getElementById("errorState").style.display="flex";
+    }
+  })
+  .catch(function(){
+    document.getElementById("loadingState").style.display="none";
+    document.getElementById("errorState").style.display="flex";
+  });
+}
+function renderDashboard(c){
+  document.getElementById("dbTitle").textContent=c.companyName+" — Compliance Dashboard";
+  document.getElementById("dbSubtitle").textContent="Client ID: "+c.clientId+" | "+c.email;
+  var pb=document.getElementById("planBadge");
+  if(pb){var sc=c.subStatus==="Active"?"active":c.subStatus==="Trial"?"trial":c.subStatus==="Overdue"?"overdue":"pending";pb.innerHTML='<span class="badge '+sc+'">'+( c.plan||"")+' — '+(c.subStatus||"")+'</span>';}
+  var ss=document.getElementById("statSub");ss.textContent=c.subStatus||"—";
+  ss.className="stat-value "+(c.subStatus==="Active"?"ok":c.subStatus==="Trial"?"":"alert");
+  document.getElementById("statBilling").textContent=c.nextBilling||c.trialEnd||"—";
+  ciItems=c.complianceItems||[];isLocked=c.complianceLocked||false;
+  renderCITable();
+  var score=calcScore(ciItems);
+  var ss2=document.getElementById("statScore");
+  ss2.textContent=score+"%";
+  ss2.className="stat-value "+(score>=80?"ok":score>=50?"warn":"alert");
+  var limit=c.itemLimit===9999?"∞":c.itemLimit;
+  document.getElementById("statItems").textContent=ciItems.length+" / "+limit;
+  if(isLocked){
+    document.getElementById("lockedNotice").style.display="block";
+    document.getElementById("addItemBtn").style.display="none";
+  }
+  else if(c.itemLimit===9999||ciItems.length<c.itemLimit){
+    document.getElementById("addItemBtn").style.display="inline-flex";
+  } else {
+    document.getElementById("addItemBtn").style.display="none";
+  }
+  var fields=[["Company",c.companyName],["Client Name",c.clientName],["Email",c.email],["Country",c.country],["Industry",c.industry],["Plan",c.plan],["Currency",c.currency],["Payment Ref",c.greyRef]];
+  var ag=document.getElementById("accountGrid");
+  if(ag)ag.innerHTML=fields.map(function(f){return'<div><div class="account-label">'+f[0]+'</div><div class="account-value">'+(f[1]||"—")+'</div></div>';}).join("");
+}
+function calcScore(items){if(!items||items.length===0)return 0;var ok=items.filter(function(i){return i.status==="Compliant"||i.status==="On Track"||i.status==="Pending";}).length;return Math.round((ok/items.length)*100);}
+function renderCITable(){
+  var tbody=document.getElementById("ciBody"),noMsg=document.getElementById("noItemsMsg");
+  if(!tbody)return;
+  if(!ciItems||ciItems.length===0){tbody.innerHTML="";if(noMsg)noMsg.style.display="block";return;}
+  if(noMsg)noMsg.style.display="none";
+  tbody.innerHTML=ciItems.map(function(item,i){
+    var sc=item.status==="Urgent"?"alert":item.status==="Due Soon"?"warn":"ok";
+    return'<tr>'+
+      '<td style="color:var(--mist);font-family:DM Mono,monospace;font-size:11px">'+(i+1)+'</td>'+
+      '<td style="font-weight:500">'+(item.name||"")+'</td>'+
+      '<td style="font-family:DM Mono,monospace;font-size:11px;color:var(--mist)">'+(item.expiry||"—")+'</td>'+
+      '<td style="font-size:11px;color:var(--mist)">'+(item.frequency||"Annually")+'</td>'+
+      '<td><span class="badge '+sc+'">'+(item.status||"Pending")+'</span></td>'+
+      '</tr>';
+  }).join("");
+}
+function toggleAddForm(){
+  var f=document.getElementById("addItemForm");
+  if(!f)return;
+  f.style.display=f.style.display==="block"?"none":"block";
+}
+function addNewItem(){
+  var n=document.getElementById("newCIName").value.trim();
+  var e=document.getElementById("newCIExpiry").value;
+  var f=document.getElementById("newCIFreq").value;
+  var msg=document.getElementById("addFormMsg");
+  if(!n){if(msg){msg.textContent="Requirement name is required.";msg.style.color="var(--signal)";}return;}
+  if(clientData&&clientData.itemLimit!==9999&&ciItems.length>=clientData.itemLimit){
+    if(msg){msg.textContent="Item limit reached for your plan. Upgrade for more.";msg.style.color="var(--signal)";}return;
+  }
+  ciItems.push({name:n,expiry:e,frequency:f,status:"Pending"});
+  document.getElementById("newCIName").value="";
+  document.getElementById("newCIExpiry").value="";
+  renderCITable();
+  document.getElementById("saveBar").style.display="flex";
+  if(msg){msg.textContent="Item added. Click Save Changes to confirm.";msg.style.color="var(--safe)";}
+  if(clientData&&clientData.itemLimit!==9999&&ciItems.length>=clientData.itemLimit){
+    document.getElementById("addItemBtn").style.display="none";
+  }
+}
+function cancelChanges(){
+  if(clientData)ciItems=clientData.complianceItems||[];
+  renderCITable();
+  document.getElementById("saveBar").style.display="none";
+  document.getElementById("addItemForm").style.display="none";
+}
+function saveCompliance(){
+  var btn=document.getElementById("saveBtn");
+  btn.disabled=true;btn.innerHTML='<span class="spinner"></span>Saving...';
+  fetch(WEBAPP_URL,{method:"POST",headers:{"Content-Type":"application/json"},
+    body:JSON.stringify({action:"updateCompliance",token:token,items:JSON.stringify(ciItems)})})
+  .then(function(r){return r.json();})
+  .then(function(d){
+    btn.disabled=false;btn.innerHTML="Save Changes";
+    var msg=document.getElementById("addFormMsg");
+    if(d.success){
+      document.getElementById("saveBar").style.display="none";
+      document.getElementById("addItemForm").style.display="none";
+      isLocked=true;
+      document.getElementById("lockedNotice").style.display="block";
+      document.getElementById("addItemBtn").style.display="none";
+      if(msg){msg.textContent="✅ Saved successfully!";msg.style.color="var(--safe)";}
+    } else {
+      if(msg){msg.textContent="Error: "+(d.error||"Could not save. Try again.");msg.style.color="var(--signal)";}
+    }
+  })
+  .catch(function(){
+    btn.disabled=false;btn.innerHTML="Save Changes";
+    var msg=document.getElementById("addFormMsg");
+    if(msg){msg.textContent="Connection error. Please try again.";msg.style.color="var(--signal)";}
+  });
+}
+function doSignOut(){
+  sessionStorage.removeItem("ctoken");
+  sessionStorage.removeItem("cid");
+  sessionStorage.removeItem("cplan");
+  sessionStorage.removeItem("cname");
+  window.location.href="index.html";
+}
+window.addEventListener("DOMContentLoaded",init);
+</script>
+</body>
+</html>
